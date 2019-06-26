@@ -48,6 +48,9 @@ Style/TrailingCommaInHashLiteral:
 Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: comma
 
+Style/DoubleNegation:
+  Enabled: false
+
 BlockLength:
   Enabled: false
 

@@ -22,7 +22,105 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Step 1 - Define policy object
+
+```ruby
+module ApplicationPolicy
+  extend KittyPolicy
+  extend self
+
+  # generates a method named `can_schedule_far_ahead?`
+  # example: no subject, just ability
+  can :schedule_far_ahead do |user|
+    user.reputation_level > 5
+  end
+
+  # generates a method named `can_start_trial?`
+  # example: `allow_guest` access
+  can :start_trial, allow_guest: true do |user, _subscription|
+    !user || user.trial_used?
+  end
+
+  # generates a method named `can_create_chat_room?`
+  # example: subject as symbol
+  can :create, :chat_room do |user|
+    user.admin?
+  end
+
+  # generates a method named `can_create_post?`
+  # example: subject as class, instance not used
+  can :create, Post do |user|
+    user.can_post?
+  end
+
+  # generates a method named `can_edit_post?`
+  # example: subject as class, passing subject instance
+  can :edit, Post do |user, post|
+    user.admin?  || user == post.author
+  end
+
+  # generates a method named `can_manage_account?`
+  # example: using a private helper method
+  can :manage, Account do |user, account|
+    user.admin? || member?(user, account)
+  end
+
+  private
+
+  # you can extract private helper methods
+  def member?(user, account)
+    # ...
+  end
+end
+```
+
+`can` is just a convince helper to create methods on a module:
+
+```
+ApplicationPolicy.can_schedule_far_ahead?
+ApplicationPolicy.can_start_trial?
+ApplicationPolicy.can_create_post?
+ApplicationPolicy.can_edit_post?
+ApplicationPolicy.can_manage_account?
+```
+
+### Step 2 - Use policy object
+
+```ruby
+# answers if ability is allowed to a user
+ApplicationPolicy.can?(user, :create, Post)
+ApplicationPolicy.can?(user, :create, Post.new)
+ApplicationPolicy.can?(user, :create, post)
+ApplicationPolicy.can?(user, :start_trial)
+
+# raises `KittyPolicy::AccessDenied` when ability isn't allowed to user
+ApplicationPolicy.authorize!(user, :create, Post)
+ApplicationPolicy.authorize!(user, :create, Post.new)
+ApplicationPolicy.authorize!(user, :create, post)
+ApplicationPolicy.authorize!(user, :start_trial)
+```
+
+### (Optional Step) - Group policies into separate files
+
+You can split your logic into multiple policy files:
+
+```ruby
+module Posts::Policy
+  extend KittyPolicy
+  extend self
+
+  # ... define abilities
+end
+```
+
+Then you can group them together.
+
+```ruby
+module ApplicationPolicy
+  extend Posts::Policy
+  extend Ship::Policy
+end
+```
 
 ## Development
 
