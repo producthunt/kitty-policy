@@ -2,15 +2,6 @@
 
 require 'spec_helper'
 
-class Post
-  attr_reader :name, :user
-
-  def initialize(name: nil, user: nil)
-    @name = name
-    @user = user
-  end
-end
-
 RSpec.describe KittyPolicy do
   def define_policy(&block)
     Module.new do

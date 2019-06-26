@@ -16,7 +16,7 @@ Style/PercentLiteralDelimiters:
     '%r': '()'
 
 LineLength:
-  Max: 120
+  Max: 140
 
 Metrics/MethodLength:
   Max: 20
