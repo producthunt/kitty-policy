@@ -13,9 +13,8 @@ end
 
 RSpec.describe KittyPolicy do
   def define_policy(&block)
-    policy_module = described_class
     Module.new do
-      extend policy_module
+      extend KittyPolicy::DSL
       extend self
 
       instance_eval(&block)
