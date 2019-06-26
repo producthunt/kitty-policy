@@ -7,9 +7,9 @@ require 'kitty_policy/helper'
 module KittyPolicy
   def can?(user, ability, subject = :empty)
     if subject == :empty
-      public_send Helper.rule_name(ability), user
+      public_send Helper.method_name(ability), user
     else
-      public_send Helper.rule_name(ability, subject), user, subject
+      public_send Helper.method_name(ability, subject), user, subject
     end
   end
 
@@ -21,7 +21,7 @@ module KittyPolicy
 
   def can(abilities, subject = nil, allow_guest: false, &block)
     Array(abilities).each do |ability|
-      define_method Helper.rule_name(ability, subject) do |*args|
+      define_method Helper.method_name(ability, subject) do |*args|
         (args[0] || allow_guest) && !!block.call(*args)
       end
     end

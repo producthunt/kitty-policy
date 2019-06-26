@@ -32,6 +32,9 @@ RSpec.describe KittyPolicy do
 
       expect(policy.can?(:user, :edit)).to eq true
       expect(policy.can?(:other, :edit)).to eq false
+
+      expect(policy.can_edit?(:user)).to eq true
+      expect(policy.can_edit?(:other)).to eq false
     end
 
     it 'can call can_[ability]_[subject]?' do
@@ -44,6 +47,9 @@ RSpec.describe KittyPolicy do
       expect(policy.can?(:user, :edit, Post.new(name: 'name'))).to eq true
       expect(policy.can?(:user, :edit, Post.new)).to eq false
       expect(policy.can?(:other, :edit, Post.new(name: 'name'))).to eq false
+
+      expect(policy.can_edit_post?(:user, Post.new(name: 'name'))).to eq true
+      expect(policy.can_edit_post?(:user, Post.new)).to eq false
     end
 
     it 'can call can_[ability]_[subject_class]?' do
@@ -56,6 +62,9 @@ RSpec.describe KittyPolicy do
       expect(policy.can?(:user, :create, Post)).to eq true
       expect(policy.can?(:other, :create, Post)).to eq false
       expect(policy.can?(nil, :create, Post)).to eq false
+
+      expect(policy.can_create_post?(:user)).to eq true
+      expect(policy.can_create_post?(:other)).to eq false
     end
 
     it 'can call can_[ability]_[subject as string]?' do

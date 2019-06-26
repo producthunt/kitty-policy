@@ -1,16 +1,14 @@
 # frozen_string_literal: true
 
 module KittyPolicy
-  extend self
-
   module Helper
     extend self
 
-    def rule_name(ability, subject = nil)
+    def method_name(ability, subject = nil)
       if subject
-        "can_#{ability}?"
+        "can_#{ability}_#{underscore(subject_to_string(subject)).tr('/', '_')}?"
       else
-        "can_#{underscore(subject_to_string(subject)).tr('/', '_')}?"
+        "can_#{ability}?"
       end
     end
 
