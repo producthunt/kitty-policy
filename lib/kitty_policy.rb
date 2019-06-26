@@ -5,11 +5,11 @@ require 'kitty_policy/access_denied'
 require 'kitty_policy/helper'
 
 module KittyPolicy
-  def can?(user, ability, subject = :empty)
+  def can?(user, action, subject = :empty)
     if subject == :empty
-      public_send Helper.method_name(ability), user
+      public_send Helper.method_name(action), user
     else
-      public_send Helper.method_name(ability, subject), user, subject
+      public_send Helper.method_name(action, subject), user, subject
     end
   end
 
@@ -20,8 +20,8 @@ module KittyPolicy
   private
 
   def can(abilities, subject = nil, allow_guest: false, &block)
-    Array(abilities).each do |ability|
-      define_method Helper.method_name(ability, subject) do |*args|
+    Array(abilities).each do |action|
+      define_method Helper.method_name(action, subject) do |*args|
         (args[0] || allow_guest) && !!block.call(*args)
       end
     end

@@ -4,11 +4,11 @@ module KittyPolicy
   module Helper
     extend self
 
-    def method_name(ability, subject = nil)
+    def method_name(action, subject = nil)
       if subject
-        "can_#{ability}_#{underscore(subject_to_string(subject)).tr('/', '_')}?"
+        "can_#{action}_#{underscore(subject_to_string(subject)).tr('/', '_')}?"
       else
-        "can_#{ability}?"
+        "can_#{action}?"
       end
     end
 

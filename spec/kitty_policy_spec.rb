@@ -23,7 +23,7 @@ RSpec.describe KittyPolicy do
   end
 
   describe '.can?' do
-    it 'can call can_[ability]?' do
+    it 'can call can_[action]?' do
       policy = define_policy do
         can :edit do |user|
           user == :user
@@ -37,7 +37,7 @@ RSpec.describe KittyPolicy do
       expect(policy.can_edit?(:other)).to eq false
     end
 
-    it 'can call can_[ability]_[subject]?' do
+    it 'can call can_[action]_[subject]?' do
       policy = define_policy do
         can :edit, :post do |user, post|
           user == :user && post.name == 'name'
@@ -52,7 +52,7 @@ RSpec.describe KittyPolicy do
       expect(policy.can_edit_post?(:user, Post.new)).to eq false
     end
 
-    it 'can call can_[ability]_[subject_class]?' do
+    it 'can call can_[action]_[subject_class]?' do
       policy = define_policy do
         can :create, Post do |user|
           user == :user
@@ -67,7 +67,7 @@ RSpec.describe KittyPolicy do
       expect(policy.can_create_post?(:other)).to eq false
     end
 
-    it 'can call can_[ability]_[subject as string]?' do
+    it 'can call can_[action]_[subject as string]?' do
       policy = define_policy do
         can :create, Post do |user|
           user == :user
@@ -103,7 +103,7 @@ RSpec.describe KittyPolicy do
   end
 
   describe '.can' do
-    it 'accepts only ability' do
+    it 'accepts only action' do
       policy = define_policy do
         can :moderate do
           true

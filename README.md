@@ -93,13 +93,13 @@ ApplicationPolicy.can_manage_account?
 ### Step 2 - Use policy object
 
 ```ruby
-# answers if action is allowed to a user
+# answers if user can perform certain action
 ApplicationPolicy.can?(user, :create, Post)
 ApplicationPolicy.can?(user, :create, Post.new)
 ApplicationPolicy.can?(user, :create, post)
 ApplicationPolicy.can?(user, :start_trial)
 
-# raises `KittyPolicy::AccessDenied` when action isn't allowed to user
+# raises `KittyPolicy::AccessDenied` when user can't perform certain action
 ApplicationPolicy.authorize!(user, :create, Post)
 ApplicationPolicy.authorize!(user, :create, Post.new)
 ApplicationPolicy.authorize!(user, :create, post)

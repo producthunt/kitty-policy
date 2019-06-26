@@ -2,11 +2,11 @@
 
 module KittyPolicy
   class AccessDenied < StandardError
-    attr_reader :user, :ability, :subject
+    attr_reader :user, :action, :subject
 
-    def initialize(user = nil, ability = nil, subject = nil)
+    def initialize(user = nil, action = nil, subject = nil)
       @user = user
-      @ability = ability
+      @action = action
       @subject = subject
 
       super 'Not authorized'
