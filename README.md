@@ -36,7 +36,7 @@ module ApplicationPolicy
   extend self
 
   # generates a method named `can_moderate?`
-  # example: no subject, just ability
+  # example: no subject, just action
   can :moderate do |user|
     user.admin?
   end
@@ -93,13 +93,13 @@ ApplicationPolicy.can_manage_account?
 ### Step 2 - Use policy object
 
 ```ruby
-# answers if ability is allowed to a user
+# answers if action is allowed to a user
 ApplicationPolicy.can?(user, :create, Post)
 ApplicationPolicy.can?(user, :create, Post.new)
 ApplicationPolicy.can?(user, :create, post)
 ApplicationPolicy.can?(user, :start_trial)
 
-# raises `KittyPolicy::AccessDenied` when ability isn't allowed to user
+# raises `KittyPolicy::AccessDenied` when action isn't allowed to user
 ApplicationPolicy.authorize!(user, :create, Post)
 ApplicationPolicy.authorize!(user, :create, Post.new)
 ApplicationPolicy.authorize!(user, :create, post)
@@ -145,6 +145,36 @@ describe ApplicationPolicy do
     it 'returns false for everyone else' do
       expect(User.new(admin: false)).not_to be_able_to :moderate
     end
+  end
+end
+```
+
+### Integration with GraphQL
+
+#### Can Resolver
+
+Exposes if current user can perform certain action.
+
+```ruby
+# Manually import graphql plugin
+require 'kitty_policy/graphql/can_resolver'
+
+module Resolvers
+  Can = KittyPolicy::GraphQL::CanResolver.new(
+    policy: ApplicationPolicy,        # required
+    base_resolver: BaseResolver,      # optional, default: ::GraphQL::Schema::Resolver,
+    current_user_key: :current_user,  # optional, default: :current_user
+  )
+end
+```
+
+```ruby
+module Types
+  class PostType < BaseObject
+    # ...
+
+    field :can_edit, resolver: Resolvers::Can.perform(:edit)                   # -> ApplicationPolicy.can?(edit, post)
+    field :can_moderate, resolver: Resolvers::Can.perform(:moderate) { :site } # -> ApplicationPolicy.can?(:moderate, :site)
   end
 end
 ```
