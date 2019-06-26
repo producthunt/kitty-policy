@@ -1,5 +1,7 @@
 # KittyPolicy
 
+**NOT RELEASED YEY**
+
 Minimalistic authorization library extracted from [Product Hunt](https://www.producthunt.com/).
 
 It uses a simple DSL to define authorization rules and use a minimal amount of memory.  Has an integration with [GraphQL gem](https://rubygems.org/gems/graphql).
