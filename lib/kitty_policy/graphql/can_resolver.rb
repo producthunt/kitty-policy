@@ -20,7 +20,7 @@ module KittyPolicy
             policy.can?(
               context[current_user_key],
               action,
-              extract_subject ? extract_subject.call(object) : object, # rubocop:disable Performance/RedundantBlockCall
+              extract_subject ? extract_subject.call(object) : object,
             )
           end
         end
