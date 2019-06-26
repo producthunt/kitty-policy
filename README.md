@@ -128,6 +128,27 @@ module ApplicationPolicy
 end
 ```
 
+### Testing with RSpec
+
+```ruby
+require 'spec_helper'
+require 'kitty_policy/rspec'
+
+describe ApplicationPolicy do
+  include KittyPolicy::RSpec
+
+  describe 'can_moderate?' do
+    it 'returns true for admin' do
+      expect(User.new(admin: true)).to be_able_to :moderate
+    end
+
+    it 'returns false for everyone else' do
+      expect(User.new(admin: false)).not_to be_able_to :moderate
+    end
+  end
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
