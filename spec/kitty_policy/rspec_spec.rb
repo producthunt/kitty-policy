@@ -11,7 +11,7 @@ module ExamplePolicy
   end
 end
 
-RSpec.describe ExamplePolicy do
+RSpec.describe ExamplePolicy do # rubocop:disable RSpec/FilePath
   include KittyPolicy::RSpec
 
   describe '.be_able_to' do
