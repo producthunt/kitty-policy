@@ -5,7 +5,6 @@ require 'kitty_policy/rspec'
 
 module ExamplePolicy
   extend KittyPolicy::DSL
-  extend self
 
   can :moderate do |user|
     user == :user

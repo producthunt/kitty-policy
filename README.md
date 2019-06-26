@@ -32,8 +32,7 @@ Or install it yourself as:
 
 ```ruby
 module ApplicationPolicy
-  extend KittyPolicy
-  extend self
+  extend KittyPolicy::DSL
 
   # generates a method named `can_moderate?`
   # example: no subject, just action
@@ -112,8 +111,7 @@ You can split your logic into multiple policy files:
 
 ```ruby
 module Posts::Policy
-  extend KittyPolicy
-  extend self
+  extend KittyPolicy::DSL
 
   # ... define abilities
 end

@@ -2,6 +2,10 @@
 
 module KittyPolicy
   module DSL
+    def self.extended(base)
+      base.extend(base)
+    end
+
     def can?(user, action, subject = :empty)
       if subject == :empty
         public_send Helper.method_name(action), user
