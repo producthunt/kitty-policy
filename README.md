@@ -31,10 +31,10 @@ module ApplicationPolicy
   extend KittyPolicy
   extend self
 
-  # generates a method named `can_schedule_far_ahead?`
+  # generates a method named `can_moderate?`
   # example: no subject, just ability
-  can :schedule_far_ahead do |user|
-    user.reputation_level > 5
+  can :moderate do |user|
+    user.admin?
   end
 
   # generates a method named `can_start_trial?`
@@ -79,7 +79,7 @@ end
 `can` is just a convince helper to create methods on a module:
 
 ```
-ApplicationPolicy.can_schedule_far_ahead?
+ApplicationPolicy.can_moderate?
 ApplicationPolicy.can_start_trial?
 ApplicationPolicy.can_create_post?
 ApplicationPolicy.can_edit_post?
