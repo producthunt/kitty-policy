@@ -11,6 +11,7 @@ class Post
   end
 end
 
+
 RSpec.describe KittyPolicy do
   def define_policy(&block)
     Module.new do
