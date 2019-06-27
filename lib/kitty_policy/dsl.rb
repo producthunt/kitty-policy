@@ -20,7 +20,7 @@ module KittyPolicy
 
     private
 
-    DEFAULT_BLOCK = ->(user) { !!user }
+    DEFAULT_BLOCK = ->(user, *rest) { !!user }
 
     def can(abilities, subject = nil, allow_guest: false, &block)
       block ||= DEFAULT_BLOCK
