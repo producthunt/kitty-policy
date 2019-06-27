@@ -183,5 +183,14 @@ RSpec.describe KittyPolicy do
       expect(policy.can?(:user, :register)).to eq false
       expect(policy.can?(nil, :register)).to eq true
     end
+
+    it 'has default block' do
+      policy = define_policy do
+        can :view
+      end
+
+      expect(policy.can?(:user, :view)).to eq true
+      expect(policy.can?(nil, :view)).to eq false
+    end
   end
 end

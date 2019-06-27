@@ -20,7 +20,11 @@ module KittyPolicy
 
     private
 
+    DEFAULT_BLOCK = ->(user) { !!user }
+
     def can(abilities, subject = nil, allow_guest: false, &block)
+      block ||= DEFAULT_BLOCK
+
       Array(abilities).each do |action|
         define_method Helper.method_name(action, subject) do |*args|
           (args[0] || allow_guest) && !!block.call(*args)
