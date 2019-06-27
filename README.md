@@ -149,7 +149,46 @@ end
 
 ### Integration with GraphQL
 
-#### Can Resolver
+#### Field level authorization
+
+```ruby
+# Manually import graphql plugin
+require 'kitty_policy/graphql/field_authorization'
+
+class ProductHuntSchema < GraphQL::Schema
+  # setup authorization per field
+  instrument :field, KittyPolicy::GraphQL::FieldAuthorization.new(
+    policy: ApplicationPolicy,        # required
+    current_user_key: :current_user,  # optional, default: :current_user
+  )
+
+  # ...
+end
+```
+
+```ruby
+module Types
+  class PostType < BaseObject
+    # Same as:
+    # if ApplicationPolicy.can?(context[:current_user], :edit, object)
+    #   return metrics
+    # else
+    #   return []
+    # end
+    field :metrics, [MetricType], null: false, authorize: :edit, fallback: []
+
+    # Same as:
+    # if ApplicationPolicy.can?(context[:current_user], :moderate, object)
+    #   return moderation_changes_count
+    # else
+    #   return 0
+    # end
+    field :moderation_changes_count, Integer, null: false, authorize: :moderate, fallback: 0
+  end
+end
+```
+
+#### Can resolver
 
 Exposes if current user can perform certain action.
 
@@ -160,8 +199,8 @@ require 'kitty_policy/graphql/can_resolver'
 module Resolvers
   Can = KittyPolicy::GraphQL::CanResolver.new(
     policy: ApplicationPolicy,        # required
-    base_resolver: BaseResolver,      # optional, default: ::GraphQL::Schema::Resolver,
     current_user_key: :current_user,  # optional, default: :current_user
+    base_resolver: BaseResolver,      # optional, default: ::GraphQL::Schema::Resolver,
   )
 end
 ```
