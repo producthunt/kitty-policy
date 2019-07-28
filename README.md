@@ -2,6 +2,9 @@
 
 **NOT RELEASED YET**
 
+[![Code Climate](https://codeclimate.com/github/producthunt/kitty-policy.svg)](https://codeclimate.com/github/producthunt/kitty-policy)
+[![Build Status](https://secure.travis-ci.org/producthunt/kitty-policy.svg)](http://travis-ci.org/producthunt/kitty-policy)
+
 Minimalistic authorization library extracted from [Product Hunt](https://www.producthunt.com/).
 
 Features:
