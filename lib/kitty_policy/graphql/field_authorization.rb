@@ -1,17 +1,5 @@
 # frozen_string_literal: true
 
-if defined?(::GraphQL::Field)
-  ::GraphQL::Field.accepts_definitions(
-    fallback: GraphQL::Define.assign_metadata_key(:fallback),
-    authorize: GraphQL::Define.assign_metadata_key(:authorize),
-  )
-end
-
-if defined?(::GraphQL::Schema::Field)
-  ::GraphQL::Schema::Field.accepts_definition(:fallback)
-  ::GraphQL::Schema::Field.accepts_definition(:authorize)
-end
-
 module KittyPolicy
   module GraphQL
     class FieldAuthorization
@@ -42,5 +30,29 @@ module KittyPolicy
         end
       end
     end
+
+    class AssignFallbackKey
+      def initialize(key)
+        @key = key
+      end
+
+      # NOTE(rstankov): This is needed because when we have empty array([]) as fallback
+      #   internally graphql-ruby does a *args and this loses the empty array
+      def call(defn, value = [])
+        defn.metadata[@key] = value
+      end
+    end
   end
+end
+
+if defined?(::GraphQL::Field)
+  ::GraphQL::Field.accepts_definitions(
+    fallback: KittyPolicy::GraphQL::AssignFallbackKey.new(:fallback),
+    authorize: GraphQL::Define.assign_metadata_key(:authorize),
+  )
+end
+
+if defined?(::GraphQL::Schema::Field)
+  ::GraphQL::Schema::Field.accepts_definition(:fallback)
+  ::GraphQL::Schema::Field.accepts_definition(:authorize)
 end
