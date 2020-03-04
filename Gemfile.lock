@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    kitty_policy (0.1.0)
+    kitty_policy (0.1.2)
 
 GEM
   remote: https://rubygems.org/
@@ -54,4 +54,4 @@ DEPENDENCIES
   rubocop-rspec (= 1.33.0)
 
 BUNDLED WITH
-   2.0.1
+   2.0.2
