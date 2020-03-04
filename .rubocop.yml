@@ -15,8 +15,8 @@ Style/PercentLiteralDelimiters:
     '%w': '()'
     '%r': '()'
 
-LineLength:
-  Max: 140
+Layout/LineLength:
+  Max: 150
 
 Metrics/MethodLength:
   Max: 20
@@ -24,7 +24,10 @@ Metrics/MethodLength:
 Metrics/AbcSize:
   Max: 40
 
-Documentation:
+Metrics/BlockLength:
+  Enabled: false
+
+Style/Documentation:
   Enabled: false
 
 Style/ModuleFunction:
@@ -49,9 +52,6 @@ Style/TrailingCommaInArguments:
   EnforcedStyleForMultiline: comma
 
 Style/DoubleNegation:
-  Enabled: false
-
-BlockLength:
   Enabled: false
 
 RSpec/MultipleExpectations:
