@@ -20,6 +20,17 @@ module KittyPolicy
 
           if policy.can?(context[current_user_key], field.metadata[:authorize], object)
             old_resolve.call(type_or_object, arguments, context)
+          elsif field.connection?
+            # NOTE(rstankov): When field is connection we need to wrap it with connection option as done here:
+            #   https://github.com/rmosolgo/graphql-ruby/blob/master/lib/graphql/relay/connection_resolve.rb#L37-L38
+            #
+            #   Normally GraphQL gem will handle this, however this instrument is bypassing it
+            nodes = field.metadata[:fallback]
+
+            parent = parent.is_a?(::GraphQL::Schema::Object) ? context.object.object : context.object
+
+            connection_class = ::GraphQL::Relay::BaseConnection.connection_for_nodes(nodes)
+            connection_class.new(nodes, arguments, field: field, max_page_size: field.connection_max_page_size, parent: parent, context: context)
           else
             field.metadata[:fallback]
           end
