@@ -193,7 +193,7 @@ end
 ```ruby
 module Types
   class QueryType < BaseObject
-    # With fallback, sSame as:
+    # With fallback, same as:
     # if ApplicationPolicy.can?(context[:current_user], :view, post)
     #   return post
     # else
