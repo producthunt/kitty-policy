@@ -12,7 +12,7 @@ module KittyPolicy
         return instrument_with_authorize(field) if field.metadata.key?(:authorize)
         return instrument_with_authorize_object(field) if field.metadata.key?(:authorize_object)
 
-        return field
+        field
       end
 
       private
@@ -49,9 +49,7 @@ module KittyPolicy
       end
 
       def instrument_with_authorize_object(field)
-        if field.connection?
-          raise "Can't use `authorize_object` on a connection"
-        end
+        raise "Can't use `authorize_object` on a connection" if field.connection?
 
         policy = @policy
         current_user_key = @current_user_key
