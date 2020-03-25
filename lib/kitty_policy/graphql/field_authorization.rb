@@ -9,8 +9,15 @@ module KittyPolicy
       end
 
       def instrument(_type, field)
-        return field unless field.metadata.key?(:authorize)
+        return instrument_with_authorize(field) if field.metadata.key?(:authorize)
+        return instrument_with_authorize_object(field) if field.metadata.key?(:authorize_object)
 
+        field
+      end
+
+      private
+
+      def instrument_with_authorize(field)
         policy = @policy
         current_user_key = @current_user_key
 
@@ -40,6 +47,31 @@ module KittyPolicy
           resolve new_resolve
         end
       end
+
+      def instrument_with_authorize_object(field)
+        raise "Can't use `authorize_object` on a connection" if field.connection?
+        raise "Can't use `authorize_object` on an array" if field.type.list?
+
+        policy = @policy
+        current_user_key = @current_user_key
+
+        old_resolve = field.resolve_proc
+        new_resolve = lambda do |type_or_object, arguments, context|
+          object = old_resolve.call(type_or_object, arguments, context)
+          if object.nil?
+            object
+          elsif field.metadata.key?(:fallback)
+            policy.can?(context[current_user_key], field.metadata[:authorize_object], object) ? object : field.metadata[:fallback]
+          else
+            policy.authorize!(context[current_user_key], field.metadata[:authorize_object], object)
+            object
+          end
+        end
+
+        field.redefine do
+          resolve new_resolve
+        end
+      end
     end
 
     class AssignFallbackKey
@@ -60,10 +92,12 @@ if defined?(::GraphQL::Field)
   ::GraphQL::Field.accepts_definitions(
     fallback: KittyPolicy::GraphQL::AssignFallbackKey.new(:fallback),
     authorize: GraphQL::Define.assign_metadata_key(:authorize),
+    authorize_object: GraphQL::Define.assign_metadata_key(:authorize_object),
   )
 end
 
 if defined?(::GraphQL::Schema::Field)
   ::GraphQL::Schema::Field.accepts_definition(:fallback)
   ::GraphQL::Schema::Field.accepts_definition(:authorize)
+  ::GraphQL::Schema::Field.accepts_definition(:authorize_object)
 end

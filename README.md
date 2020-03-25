@@ -8,9 +8,9 @@ Minimalistic authorization library extracted from [Product Hunt](https://www.pro
 
 Features:
 
-* small DSL for defining abilities
-* not class initializations when performing abilities check
-* integrations with [GraphQL gem](https://rubygems.org/gems/graphql).
+- small DSL for defining abilities
+- not class initializations when performing abilities check
+- integrations with [GraphQL gem](https://rubygems.org/gems/graphql).
 
 ## Installation
 
@@ -186,6 +186,32 @@ module Types
     #   return 0
     # end
     field :moderation_changes_count, Integer, null: false, authorize: :moderate, fallback: 0
+  end
+end
+```
+
+```ruby
+module Types
+  class QueryType < BaseObject
+    # With fallback, same as:
+    # if ApplicationPolicy.can?(context[:current_user], :view, post)
+    #   return post
+    # else
+    #   return nil
+    # end
+    field :post, PostType, null: false, authorize_object: :view, fallback: nil do
+      argument :id, ID, required: true
+    end
+
+    # Without fallback, same as:
+    # if ApplicationPolicy.can?(context[:current_user], :view, post)
+    #   return post
+    # else
+    #   raise KittyPolicy::AccessDenied(context[:current_user], :view, post)
+    # end
+    field :post, PostType, null: false, authorize_object: :view do
+      argument :id, ID, required: true
+    end
   end
 end
 ```
