@@ -50,6 +50,7 @@ module KittyPolicy
 
       def instrument_with_authorize_object(field)
         raise "Can't use `authorize_object` on a connection" if field.connection?
+        raise "Can't use `authorize_object` on an array" if field.type.list?
 
         policy = @policy
         current_user_key = @current_user_key
