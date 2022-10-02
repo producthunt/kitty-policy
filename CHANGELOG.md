@@ -1,5 +1,9 @@
 # Changelog
 
+## Version 0.1.4
+
+* **[fix]** Raises error when "can_" method is defined more than once
+
 ## Version 0.1.3
 
 * **[feature]** Added `authorize_object` for field authorization (@tgroutars)

@@ -196,5 +196,15 @@ RSpec.describe KittyPolicy::DSL do
       expect(policy.can?(nil, :view)).to eq false
       expect(policy.can?(nil, :create, :post)).to eq false
     end
+
+    it 'raises when can method already exists' do
+      expect do
+        define_policy do
+          define_method(:can_edit_post?) {}
+
+          can :edit, :post
+        end
+      end.to raise_error 'Method "can_edit_post?" already exists'
+    end
   end
 end

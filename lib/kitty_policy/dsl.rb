@@ -26,7 +26,11 @@ module KittyPolicy
       block ||= DEFAULT_BLOCK
 
       Array(abilities).each do |action|
-        define_method Helper.method_name(action, subject) do |*args|
+        method_name = Helper.method_name(action, subject)
+
+        raise %(Method "#{method_name}" already exists) if method_defined?(method_name)
+
+        define_method method_name do |*args|
           (args[0] || allow_guest) && !!block.call(*args)
         end
       end
