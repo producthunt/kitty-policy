@@ -32,8 +32,9 @@ RSpec.describe KittyPolicy::GraphQL::CanResolver do # rubocop:disable RSpec/File
   def expect_result(resolver_class, object: nil, context: {}, **inputs)
     resolver = resolver_class.new(
       object: object,
+      field: 'field',
       context: ::GraphQL::Query::Context.new(
-        query: OpenStruct.new(schema: nil),
+        query: double(schema: nil),
         values: context,
         object: object,
       ),

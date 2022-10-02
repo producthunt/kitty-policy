@@ -8,6 +8,8 @@ AllCops:
     - db/**/*
     - vendor/**/*
     - node_modules/**/*
+  NewCops: enable
+  SuggestExtensions: false
 
 Style/PercentLiteralDelimiters:
   PreferredDelimiters:
@@ -60,8 +62,17 @@ RSpec/MultipleExpectations:
 RSpec/ExampleLength:
   Enabled: false
 
-Capybara/FeatureMethods:
+Lint/AmbiguousBlockAssociation:
   Enabled: false
 
-Lint/AmbiguousBlockAssociation:
+Gemspec/RequiredRubyVersion:
+  Enabled: false
+
+RSpec/BeEq:
+  Enabled: false
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/NoExpectationExample:
   Enabled: false

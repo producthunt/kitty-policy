@@ -14,7 +14,7 @@ module KittyPolicy
         current_user_key = @current_user_key
 
         Class.new(@base_resolver) do
-          type ::GraphQL::BOOLEAN_TYPE, null: false
+          type ::GraphQL::Types::Boolean, null: false
 
           define_method(:resolve) do
             policy.can?(

@@ -2,10 +2,11 @@
 
 require 'spec_helper'
 
-RSpec.describe KittyPolicy do
+RSpec.describe KittyPolicy::DSL do
   def define_policy(&block)
+    dsl = described_class
     Module.new do
-      extend KittyPolicy::DSL
+      extend dsl
 
       instance_eval(&block)
     end
