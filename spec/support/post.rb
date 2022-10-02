@@ -8,3 +8,11 @@ class Post
     @user = user
   end
 end
+
+class PostMedia
+  attr_reader :post
+
+  def initialize(post: nil)
+    @post = post
+  end
+end

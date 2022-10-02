@@ -35,5 +35,11 @@ module KittyPolicy
         end
       end
     end
+
+    def delegate_ability(ability, subject, to:, to_ability: ability)
+      can(ability, subject) do |user, record|
+        can?(user, to_ability, record.public_send(to))
+      end
+    end
   end
 end

@@ -2,6 +2,7 @@
 
 ## Version 0.1.4
 
+* **[feature]** Added `delegate_ability` method, which delegates ability from one object to other
 * **[fix]** Raises error when "can_" method is defined more than once
 
 ## Version 0.1.3

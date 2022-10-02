@@ -7,7 +7,7 @@ Minimalistic authorization library extracted from [Product Hunt](https://www.pro
 
 Features:
 
-- small DSL for defining abilities
+- small DSL for defining authorization abilities
 - not class initializations when performing abilities check
 - integrations with [GraphQL gem](https://rubygems.org/gems/graphql).
 
@@ -146,6 +146,31 @@ describe ApplicationPolicy do
     end
   end
 end
+```
+
+### Delegating abilities
+
+```ruby
+module ApplicationPolicy
+  extend KittyPolicy::DSL
+
+  can :edit, Post do |user, post|
+    user.id == post.user_id
+  end
+
+  # users who can edit post, should edit or delete its media
+  can :edit, PostMedia do |user, media|
+    can? user, :edit, media.post
+  end
+
+  can :destroy, PostMedia do |user, media|
+    can? user, :edit, media.post
+  end
+
+  # this can be expressed with `delegate_ability` helper
+
+  delegate_ability :edit, PostMedia, to: :post
+  delegate_ability :destroy, PostMedia, to: :post, to_ability: :edit
 ```
 
 ### Integration with GraphQL

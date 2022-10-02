@@ -70,7 +70,7 @@ RSpec.describe KittyPolicy::DSL do
     end
   end
 
-  describe 'authorize!' do
+  describe '.authorize!' do
     it 'raises when can? returns false' do
       policy = define_policy do
         can :edit do
@@ -197,14 +197,70 @@ RSpec.describe KittyPolicy::DSL do
       expect(policy.can?(nil, :create, :post)).to eq false
     end
 
+    it 'defines a method corresponding to ability' do
+      policy = define_policy do
+        can :view
+        can :create, :post
+        can :test, String
+      end
+
+      expect(policy).to respond_to :can_view?
+      expect(policy).to respond_to :can_create_post?
+      expect(policy).to respond_to :can_test_string?
+    end
+
     it 'raises when can method already exists' do
       expect do
         define_policy do
-          define_method(:can_edit_post?) {}
+          define_method(:can_edit_post?) { false }
 
           can :edit, :post
         end
       end.to raise_error 'Method "can_edit_post?" already exists'
+    end
+  end
+
+  describe '.delegate_ability' do
+    it 'delegates ability from object to other object' do
+      policy = define_policy do
+        can :edit, Post do |user, post|
+          user == post.user
+        end
+
+        delegate_ability :edit, PostMedia, to: :post
+      end
+
+      post = Post.new(user: :user1)
+      media = PostMedia.new(post: post)
+
+      expect(policy).to respond_to :can_edit_post_media?
+
+      expect(policy.can?(:user1, :edit, post)).to eq true
+      expect(policy.can?(:user1, :edit, media)).to eq true
+
+      expect(policy.can?(:user2, :edit, post)).to eq false
+      expect(policy.can?(:user2, :edit, media)).to eq false
+    end
+
+    it 'can specify to which ability to delegate' do
+      policy = define_policy do
+        can :edit, Post do |user, post|
+          user == post.user
+        end
+
+        delegate_ability :destroy, PostMedia, to: :post, to_ability: :edit
+      end
+
+      post = Post.new(user: :user1)
+      media = PostMedia.new(post: post)
+
+      expect(policy).to respond_to :can_destroy_post_media?
+
+      expect(policy.can?(:user1, :edit, post)).to eq true
+      expect(policy.can?(:user1, :destroy, media)).to eq true
+
+      expect(policy.can?(:user2, :edit, post)).to eq false
+      expect(policy.can?(:user2, :destroy, media)).to eq false
     end
   end
 end
